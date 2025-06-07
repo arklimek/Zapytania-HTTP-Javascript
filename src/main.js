@@ -1,4 +1,5 @@
 import './style.css';
+import { format } from 'date-fns';
 
 const fetchArticles = async () => {
   try {
@@ -25,12 +26,14 @@ const displayArticles = async () => {
     const articleEl = document.createElement('div');
     articleEl.classList.add('article');
 
+    const formattedDate = format(new Date(article.created_at).toLocaleDateString(), 'dd-MM-yyyy');
+
     articleEl.innerHTML = `
-      <h2>${article.title ?? '(Brak tytułu)'}</h2>
-      <h4>${article.subtitle ?? ''}</h4>
+      <h1>${article.title ?? '(Brak tytułu)'}</h1>
+      <p><strong>Podtytuł:</strong> ${article.subtitle ?? ''}</p>
       <p><strong>Autor:</strong> ${article.author}</p>
-      <p><strong>Data:</strong> ${new Date(article.created_at).toLocaleDateString()}</p>
-      <p>${article.content}</p>
+      <p><strong>Data:</strong> ${formattedDate}</p>
+      <p><strong>Treść:</strong> ${article.content}</p>
     `;
 
     container.appendChild(articleEl);
@@ -52,7 +55,7 @@ form.addEventListener('submit', async (e) => {
     subtitle: formData.get('subtitle'),
     author: formData.get('author'),
     content: formData.get('content'),
-    created_at: new Date().toISOString(), // Supabase może ustawić to automatycznie, ale na wszelki wypadek
+    created_at: new Date().toISOString(),
   };
 
   try {
@@ -76,8 +79,8 @@ form.addEventListener('submit', async (e) => {
     const created = await response.json();
     console.log('Dodano artykuł:', created);
 
-    form.reset(); // Wyczyść formularz
-    displayArticles(); // Odśwież listę artykułów
+    form.reset();
+    displayArticles();
 
   } catch (error) {
     console.error('Błąd zapisu:', error);
