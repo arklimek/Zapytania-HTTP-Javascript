@@ -21,6 +21,8 @@ const displayArticles = async () => {
   const articles = await fetchArticles();
   const container = document.getElementById('articles');
 
+  // Usunięcie wcześniej dodanych artykułów
+  container.innerHTML = '';
 
   articles.forEach((article) => {
     const articleEl = document.createElement('div');
@@ -39,6 +41,7 @@ const displayArticles = async () => {
     container.appendChild(articleEl);
   });
 };
+
 
 window.addEventListener('DOMContentLoaded', () => {
   displayArticles();
